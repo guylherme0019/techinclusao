@@ -1,23 +1,27 @@
-// in MessageParser.js
 import React from 'react';
 
-const MessageParser = ({ children, actions }) => {
-  const parse = (message) => {
-    if (message.includes('hello')) {
-      actions.handleHello();
-    }
-  };
-
+const actionProvider = ({ createChatBotMessage, setState, children}) => {
+  const initialAction = () => {
+   const message = createChatBotMessage('Bem-vindo ao bot de bate-papo!');
+   updateState(message)
+  }
+  const updateState = (message) => {
+    setState((prev) => ({
+      ...prev,
+      messages: [...prev.messages, message],
+  }));
+  }
   return (
     <div>
       {React.Children.map(children, (child) => {
         return React.cloneElement(child, {
-          parse: parse,
-          actions,
+          actions:
+          initialAction
+          ,
         });
       })}
     </div>
   );
 };
 
-export default MessageParser;
+export default actionProvider;
